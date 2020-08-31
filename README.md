@@ -1,13 +1,6 @@
 # SCache
 A Super Cache anim to cache data easily for android to avoiding ANR, replacing SharedPreference in some place
 
-## Feature
-
-+ Memory quick Cache
-+ IO Cache
-+ Support Livedata
-+ Support multiply thread operation
-
 ## Usage
 ### Get & Set
 get and set cache like that,
@@ -16,7 +9,7 @@ get and set cache like that,
 
     SCache.put(key:String, value:String, default:String?)
 
-### Observer
+### Observer(In progress...)
 Support live data observer
 
     SCache.get(key:String).observer { value->
