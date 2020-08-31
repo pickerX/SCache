@@ -33,8 +33,8 @@ class MainActivity : AppCompatActivity() {
         t1.start()
         t2.start()
 
-        c.getLive<String>("hello").observe(this) {
-            Log.e("SCache", "main observer>>>$it")
-        }
+//        c.getLive<String>("hello").observe(this) {
+//            Log.e("SCache", "main observer>>>$it")
+//        }
     }
 }
