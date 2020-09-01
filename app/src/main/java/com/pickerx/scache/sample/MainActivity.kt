@@ -1,9 +1,11 @@
 package com.pickerx.scache.sample
 
+import android.Manifest
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.pickerx.scache.Caches
+import com.pickerx.scache.checkAndRequestPermission
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,5 +38,43 @@ class MainActivity : AppCompatActivity() {
 //        c.getLive<String>("hello").observe(this) {
 //            Log.e("SCache", "main observer>>>$it")
 //        }
+
+        if (!checkAndRequestPermission(
+                arrayOf(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+            )
+        ) return
+
+        val io = Caches.io(this)
+        io.put("hello", "world")
+
+        val t3 = Thread {
+            try {
+                val s = io.getBoolean("hello")
+                Log.e("SCache", "t3>>>>s $s")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            val hello = io.getString("xxxx")
+            val nullFloat = io.getFloat("test")
+
+            check(nullFloat == 0f) { "no found test key" }
+        }
+        t3.start()
+    }
+
+    private fun log(message: String) {
+        Log.e("SCache", ">>>>s $message")
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 }

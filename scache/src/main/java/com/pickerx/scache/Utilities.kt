@@ -1,7 +1,30 @@
 package com.pickerx.scache
 
+import android.content.pm.PackageManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+
 internal fun String.hash(): Int {
     return hashCode()
+}
+
+fun AppCompatActivity.isNotGranted(permission: String): Boolean =
+    ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED
+
+/**
+ * check permission
+ */
+fun AppCompatActivity.checkAndRequestPermission(
+    permissions: Array<String>,
+    code: Int = 10088
+): Boolean {
+    permissions.forEach {
+        if (isNotGranted(it)) {
+            ActivityCompat.requestPermissions(this, permissions, code)
+            return false
+        }
+    }
+    return true
 }
 
 internal object ContainerHelpers {
