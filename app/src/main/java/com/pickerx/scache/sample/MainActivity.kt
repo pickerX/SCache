@@ -49,6 +49,7 @@ class MainActivity : AppCompatActivity() {
 
         val io = Caches.io(this)
         io.put("hello", "world")
+        io.put("int11", 11)
 
         val t3 = Thread {
             try {
@@ -58,10 +59,14 @@ class MainActivity : AppCompatActivity() {
                 e.printStackTrace()
             }
 
-            val hello = io.getString("xxxx")
+            val xxxx = io.getString("xxxx")
+            val hello = io.getString("hello")
             val nullFloat = io.getFloat("test")
+            val int11 = io.getInt("int11")
 
             check(nullFloat == 0f) { "no found test key" }
+            log(hello)
+            log("$int11")
         }
         t3.start()
     }

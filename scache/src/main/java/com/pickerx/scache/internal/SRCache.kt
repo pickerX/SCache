@@ -32,34 +32,38 @@ internal class SRCache : SCache {
     }
 
     override fun getInt(key: String, defaultValue: Int): Int {
-        return get(key, defaultValue)
+        val hashKey = key.hash()
+        val v = mIO.readAsString(hashKey)
+        return if (v.isEmpty()) defaultValue else v.toInt()
     }
 
     override fun getLong(key: String, defaultValue: Long): Long {
-        return get(key, defaultValue)
+        val hashKey = key.hash()
+        val v = mIO.readAsString(hashKey)
+        return if (v.isEmpty()) defaultValue else v.toLong()
     }
 
     override fun getFloat(key: String, defaultValue: Float): Float {
-        return get(key, defaultValue)
+        val hashKey = key.hash()
+        val v = mIO.readAsString(hashKey)
+        return if (v.isEmpty()) defaultValue else v.toFloat()
     }
 
     override fun getDouble(key: String, defaultValue: Double): Double {
-        return get(key, defaultValue)
+        val hashKey = key.hash()
+        val v = mIO.readAsString(hashKey)
+        return if (v.isEmpty()) defaultValue else v.toDouble()
     }
 
     override fun getBoolean(key: String, defaultValue: Boolean): Boolean {
-        return get(key, defaultValue)
+        val hashKey = key.hash()
+        val v = mIO.readAsString(hashKey)
+        return if (v.isEmpty()) defaultValue else v.toBoolean()
     }
 
     override fun getString(key: String, defaultValue: String): String {
         val hashKey = key.hash()
         return mIO.readAsString(hashKey)
-    }
-
-    private fun <T> get(key: String, defaultValue: T): T {
-        val hashKey = key.hash()
-        val v = mIO.readAsString(hashKey)
-        return if (v.isEmpty()) defaultValue else v as T
     }
 
     override fun <T> put(key: String, value: T) {
