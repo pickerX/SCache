@@ -77,6 +77,21 @@ internal class SRCache : SCache {
     override fun <T> put(key: String, value: T, delay: Long) {
         val hashKey = key.hash()
         when (value) {
+            is String,
+            is Int,
+            is Long,
+            is Float,
+            is Double,
+            is Boolean -> {
+                // basic type first
+                if (delay > 0) {
+                    val rule = ExpireRule.createRule(delay)
+                    mIO.write(hashKey, "$rule$value")
+                } else {
+                    val string = value.toString()
+                    mIO.write(hashKey, string)
+                }
+            }
             is Serializable -> {
                 val data = mIO.toByteArray(value)
                 data?.let {
@@ -87,11 +102,7 @@ internal class SRCache : SCache {
                 }
             }
             else -> {
-                // basic type
-                if (delay > 0) {
-                    val rule = ExpireRule.createRule(delay)
-                    mIO.write(hashKey, "$rule$value")
-                } else mIO.write(hashKey, value.toString())
+
             }
         }
     }

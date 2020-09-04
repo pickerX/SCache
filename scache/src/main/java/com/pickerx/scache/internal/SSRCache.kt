@@ -46,9 +46,7 @@ internal class SSRCache(initialCapacity: Int = 0) : SCache {
         mCache.put(realKey, value)
     }
 
-    override fun clear() {
-        mCache.clear()
-    }
+    override fun clear() = mCache.clear()
 
     override fun size(): Int = mCache.size()
 

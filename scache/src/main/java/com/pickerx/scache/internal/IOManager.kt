@@ -1,6 +1,7 @@
 package com.pickerx.scache.internal
 
 import java.io.*
+import java.nio.charset.Charset
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicLong
@@ -61,7 +62,7 @@ class IOManager(
     fun readAsString(hashKey: Int): String {
         val file = get(hashKey)
         val bytes = read(file)
-        return String(bytes)
+        return String(bytes, Charset.defaultCharset())
     }
 
     /**
