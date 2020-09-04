@@ -1,5 +1,6 @@
 package com.pickerx.scache.internal
 
+import android.util.Log
 import java.io.*
 import java.nio.charset.Charset
 import java.util.*
@@ -149,7 +150,6 @@ class IOManager(
             }
 
             if (ok) updateCountAndSizeWhenAdd(file)
-
         }
     }
 
@@ -168,6 +168,8 @@ class IOManager(
         }
         cacheSize.set(size)
         cacheCount.set(count)
+
+        Log.d("SCache", "Cache >>>count:${cacheCount.get()}, size:${cacheSize.get()}")
     }
 
     private fun updateCountAndSizeWhenRemove(file: File) {
@@ -199,6 +201,8 @@ class IOManager(
         val currentTime = System.currentTimeMillis()
         file.setLastModified(currentTime)
         lastUsageDates[file] = currentTime
+
+        Log.d("SCache", "count:${cacheCount.get()}, size:${cacheSize.get()}")
     }
 
     private fun get(key: Int): File {

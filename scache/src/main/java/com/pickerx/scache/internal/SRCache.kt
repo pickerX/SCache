@@ -56,7 +56,12 @@ internal class SRCache : SCache {
     override fun getBoolean(key: String, defaultValue: Boolean): Boolean {
         val hashKey = key.hash()
         val v = mIO.readAsString(hashKey)
-        return if (v.isEmpty()) defaultValue else v.toBoolean()
+        return if (v.isEmpty()) defaultValue else {
+            val type = v.equals("true", true) || v.equals("false", true)
+            check(type) { "key:$key 's value is not Boolean type" }
+
+            v.toBoolean()
+        }
     }
 
     override fun getString(key: String, defaultValue: String): String {
@@ -88,8 +93,7 @@ internal class SRCache : SCache {
                     val rule = ExpireRule.createRule(delay)
                     mIO.write(hashKey, "$rule$value")
                 } else {
-                    val string = value.toString()
-                    mIO.write(hashKey, string)
+                    mIO.write(hashKey, value.toString())
                 }
             }
             is Serializable -> {
