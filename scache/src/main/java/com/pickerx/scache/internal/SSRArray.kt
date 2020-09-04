@@ -76,14 +76,16 @@ internal class SSRArray(var initialCapacity: Int) : Cloneable {
     /**
      * Removes the mapping from the specified key, if there was any.
      */
-    fun remove(key: Int) {
+    fun remove(key: Int): Boolean {
         val i = ContainerHelpers.binarySearch(mKeys, mSize, key)
         if (i >= 0) {
             if (mValues[i] !== DELETED) {
                 mValues[i] = DELETED
                 mGarbage = true
+                return true
             }
         }
+        return false
     }
 
     /**

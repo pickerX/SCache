@@ -41,7 +41,7 @@ internal class SSRCache(initialCapacity: Int = 0) : SCache {
         return value ?: defaultValue
     }
 
-    override fun <T> put(key: String, value: T) {
+    override fun <T> put(key: String, value: T, delay: Long) {
         val realKey = key.hash()
         mCache.put(realKey, value)
     }
@@ -53,4 +53,7 @@ internal class SSRCache(initialCapacity: Int = 0) : SCache {
     override fun size(): Int = mCache.size()
 
     override fun contain(key: String): Boolean = mCache.containsKey(key.hash())
+
+    override fun remove(key: String): Boolean = mCache.remove(key.hash())
+
 }

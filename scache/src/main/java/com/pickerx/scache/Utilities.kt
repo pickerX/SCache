@@ -1,11 +1,19 @@
 package com.pickerx.scache
 
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 
 internal fun String.hash(): Int {
     return hashCode()
+}
+
+inline fun sCheck(value: Boolean, lazyMessage: () -> Any) {
+    if (!value) {
+        val message = lazyMessage()
+        Log.e("SCache", message.toString())
+    }
 }
 
 fun AppCompatActivity.isNotGranted(permission: String): Boolean =

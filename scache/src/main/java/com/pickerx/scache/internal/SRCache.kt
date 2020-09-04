@@ -1,9 +1,11 @@
 package com.pickerx.scache.internal
 
 import android.content.Context
+import android.util.Log
 import com.pickerx.scache.SCache
 import com.pickerx.scache.hash
 import java.io.File
+import java.io.Serializable
 
 /**
  * IO cache only
@@ -22,11 +24,7 @@ internal class SRCache : SCache {
         maxSize: Long = MAX_SIZE,
         maxCount: Int = MAX_COUNT
     ) {
-        val f = File(ctx.cacheDir, cacheName)
-        io(f, maxSize, maxCount)
-    }
-
-    private fun io(cacheDir: File, maxSize: Long, maxCount: Int) {
+        val cacheDir = File(ctx.cacheDir, cacheName)
         check(cacheDir.exists() || cacheDir.mkdirs()) { "can't make dirs in " + cacheDir.absolutePath }
         mIO = IOManager(cacheDir, maxSize, maxCount)
     }
@@ -63,23 +61,52 @@ internal class SRCache : SCache {
 
     override fun getString(key: String, defaultValue: String): String {
         val hashKey = key.hash()
-        return mIO.readAsString(hashKey)
+        var value = mIO.readAsString(hashKey)
+        ExpireRule()
+            .match(value, {
+                // expire
+                mIO.remove(hashKey)
+                Log.d("SCache", "key:$key has expired, the delay $it")
+            }, {
+                // not expire
+                value = it
+            })
+        return value
     }
 
-    override fun <T> put(key: String, value: T) {
+    override fun <T> put(key: String, value: T, delay: Long) {
         val hashKey = key.hash()
-        mIO.write(hashKey, value.toString())
+        when (value) {
+            is Serializable -> {
+                val data = mIO.toByteArray(value)
+                data?.let {
+                    if (delay > 0) {
+                        val source = ExpireRule.createRule(delay, it)
+                        mIO.write(hashKey, source)
+                    } else mIO.write(hashKey, it)
+                }
+            }
+            else -> {
+                // basic type
+                if (delay > 0) {
+                    val rule = ExpireRule.createRule(delay)
+                    mIO.write(hashKey, "$rule$value")
+                } else mIO.write(hashKey, value.toString())
+            }
+        }
     }
 
-    override fun clear() {
-        mIO.deleteAll()
-    }
+    override fun clear() = mIO.clear()
 
     override fun size(): Int = mIO.count()
 
     override fun contain(key: String): Boolean {
         val hashKey = key.hash()
-        val v = mIO.readAsString(hashKey)
-        return v.isNotEmpty()
+        return mIO.exist(hashKey)
+    }
+
+    override fun remove(key: String): Boolean {
+        val hashKey = key.hash()
+        return mIO.remove(hashKey)
     }
 }

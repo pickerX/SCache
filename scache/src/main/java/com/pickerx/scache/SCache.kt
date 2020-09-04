@@ -38,8 +38,13 @@ interface SCache {
     // fun <T> getLive(key: String): LiveData<T>
     /**
      * put key-value for caching
+     *
+     * @param key
+     * @param value
+     * @param delay how long keeping the key-value, unit second
+     *      default -1:no expire time
      */
-    fun <T> put(key: String, value: T)
+    fun <T> put(key: String, value: T, delay: Long = -1)
 
     /**
      * clear all cache data
@@ -56,4 +61,10 @@ interface SCache {
      * check contain the key value or not
      */
     fun contain(key: String): Boolean
+
+    /**
+     * remove the certain key-value
+     * @return true success false failed
+     */
+    fun remove(key: String): Boolean
 }
