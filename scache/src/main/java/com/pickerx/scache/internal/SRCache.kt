@@ -81,11 +81,15 @@ internal class SRCache : SCache {
     }
 
     override fun <T> getArray(key: String): List<T> {
-        TODO("Not yet implemented")
+        val obj = mIO.readAsObject(key.hash())
+        val data = obj as List<T>
+        return data
     }
 
     override fun <T> get(key: String): T? {
-        TODO("Not yet implemented")
+        val obj = mIO.readAsObject(key.hash())
+        val data = obj as T
+        return data
     }
 
     override fun <T> put(key: String, value: T, delay: Long) {
@@ -115,7 +119,7 @@ internal class SRCache : SCache {
                 }
             }
             else -> {
-
+                Log.e("SCache", "not support class type:${value}")
             }
         }
     }

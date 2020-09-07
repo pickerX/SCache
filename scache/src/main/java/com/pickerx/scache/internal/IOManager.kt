@@ -67,6 +67,15 @@ class IOManager(
     }
 
     /**
+     * read key's value as byteArray
+     */
+    fun readAsArray(hashKey: Int): ByteArray {
+        val file = get(hashKey)
+        val bytes = read(file)
+        return bytes
+    }
+
+    /**
      * exist key-value file
      */
     fun exist(hashKey: Int): Boolean {
@@ -86,6 +95,72 @@ class IOManager(
         cacheCount.set(0)
         val files = cacheDir.listFiles()
         files?.forEach { it.delete() }
+    }
+
+//    /**
+//     * 获取 byte 数据
+//     *
+//     * @param key
+//     * @return byte 数据
+//     */
+//    fun getAsBinary(key: String?): ByteArray? {
+//        var RAFile: RandomAccessFile? = null
+//        var removeFile = false
+//        return try {
+//            val file: File = mCache.get(key)
+//            if (!file.exists()) return null
+//            RAFile = RandomAccessFile(file, "r")
+//            val byteArray = ByteArray(RAFile.length().toInt())
+//            RAFile.read(byteArray)
+//            if (!Utils.isDue(byteArray)) {
+//                Utils.clearDateInfo(byteArray)
+//            } else {
+//                removeFile = true
+//                null
+//            }
+//        } catch (e: java.lang.Exception) {
+//            e.printStackTrace()
+//            null
+//        } finally {
+//            if (RAFile != null) {
+//                try {
+//                    RAFile.close()
+//                } catch (e: IOException) {
+//                    e.printStackTrace()
+//                }
+//            }
+//            if (removeFile) remove(key)
+//        }
+//    }
+    /**
+     * read Serializable data
+     *
+     * @param key
+     * @return Serializable object
+     */
+    fun readAsObject(key: Int): Any? {
+        val file = get(key)
+        val data: ByteArray = read(file)
+        // null when key is not exist
+        if (data.isEmpty()) return null
+
+        var bais: ByteArrayInputStream? = null
+        var ois: ObjectInputStream? = null
+        try {
+            bais = ByteArrayInputStream(data)
+            ois = ObjectInputStream(bais)
+            return ois.readObject()
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        } finally {
+            try {
+                bais?.close()
+                ois?.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+        return null
     }
 
     /**

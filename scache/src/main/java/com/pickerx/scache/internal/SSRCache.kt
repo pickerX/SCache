@@ -35,7 +35,7 @@ internal class SSRCache(initialCapacity: Int = 0) : SCache {
     }
 
     override fun <T> getArray(key: String): List<T> {
-        val array = get(key, arrayListOf<T>())
+        val array = get(key, emptyList<T>())
         return array
     }
 
