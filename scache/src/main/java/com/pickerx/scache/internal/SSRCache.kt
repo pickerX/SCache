@@ -1,5 +1,6 @@
 package com.pickerx.scache.internal
 
+import android.util.Log
 import com.pickerx.scache.SCache
 import com.pickerx.scache.hash
 
@@ -53,6 +54,12 @@ internal class SSRCache(initialCapacity: Int = 0) : SCache {
     override fun <T> put(key: String, value: T, delay: Long) {
         val realKey = key.hash()
         mCache.put(realKey, value)
+        if (delay > 0) {
+            Log.w(
+                "SCache",
+                "Memory cache isn't support timeout mechanism, if you need this, let's me know by creating issue"
+            )
+        }
     }
 
     override fun clear() = mCache.clear()

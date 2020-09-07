@@ -71,6 +71,7 @@ class MainActivity : AppCompatActivity() {
             Log.e("SCache", "string's >>>> $string")
             Log.e("SCache", "array's >>>> $arrays")
             Log.e("SCache", "data's >>>> $datas")
+            Log.e("SCache", "not exist data's >>>> ${io.get<Data>("noExistData")}")
             Log.e("SCache", "data's >>>> $dataArrays")
 
             io.put("expireKey", "hello world", 10)

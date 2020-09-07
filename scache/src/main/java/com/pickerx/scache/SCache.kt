@@ -35,8 +35,18 @@ interface SCache {
      */
     fun getString(key: String, defaultValue: String = ""): String
 
+    /**
+     * get List<T>, empty list when not found
+     *
+     * [T] must implement [Serializable] interface
+     */
     fun <T> getArray(key: String): List<T>
 
+    /**
+     * get the exactly type[T] object, null when not found
+     *
+     * [T] must implement [Serializable] interface
+     */
     fun <T> get(key: String): T?
 
     // fun <T> getLive(key: String): LiveData<T>
