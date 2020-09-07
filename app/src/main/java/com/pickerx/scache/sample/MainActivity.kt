@@ -28,25 +28,46 @@ class MainActivity : AppCompatActivity() {
         ) return
 
         val io = Caches.io(this)
-        io.put("hello", "world")
-        io.put("int11", 11)
+        // basic data
+        io.put("int", 11)
+        io.put("long", 55555L)
+        io.put("float", -221.0f)
+        io.put("double", 99.88)
+        io.put("boolean", true)
+        io.put("string", "hello world")
+        io.put("expireKey", "hello world", 10)
+        // array or class
+        val array = listOf("hello", "world", "hello", "kotlin", "hello", "android")
+        io.put("array", array)
+
+        val data = Data(3, "koikk", false)
+        io.put("data", data)
 
         val t3 = Thread {
-            try {
-                val s = io.getBoolean("hello")
-                Log.e("SCache", "hello getBoolean >>>> $s")
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            val notExistKey = io.getDouble("notExistKey")
+            val defaultValue = io.getBoolean("defaultValue", false)
+            val int = io.getInt("int")
+            val long = io.getLong("long")
+            val float = io.getFloat("float")
+            val double = io.getDouble("double")
+            val boolean = io.getBoolean("boolean")
+            val string = io.getString("string")
+            val array = io.getString("array")
+            val expireKey = io.getString("expireKey")
 
-            val xxxx = io.getString("xxxx")
-            val hello = io.getString("hello")
-            val nullFloat = io.getFloat("test")
-            val int11 = io.getInt("int11")
-
-            check(nullFloat == 0f) { "no found test key" }
-            Log.e("SCache", "hello >>>> $hello")
-            Log.e("SCache", "int11 >>>> $int11")
+            Log.e("SCache", "not exist key's value >>>> $notExistKey")
+            Log.e("SCache", "defaultValue's >>>> $defaultValue")
+            Log.e("SCache", "int's >>>> $int")
+            Log.e("SCache", "long's >>>> $long")
+            Log.e("SCache", "float's >>>> $float")
+            Log.e("SCache", "double's >>>> $double")
+            Log.e("SCache", "boolean's >>>> $boolean")
+            Log.e("SCache", "string's >>>> $string")
+            Log.e("SCache", "array's >>>> $array")
+            Log.e("SCache", "expireKey's >>>> $expireKey")
+            Log.e("SCache", "delay >>>> 11s")
+            Thread.sleep(11_000L)
+            Log.e("SCache", "expireKey's >>>> ${io.getString("expireKey")}")
         }
         t3.start()
     }

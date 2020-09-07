@@ -35,6 +35,10 @@ interface SCache {
      */
     fun getString(key: String, defaultValue: String = ""): String
 
+    fun <T> getArray(key: String): List<T>
+
+    fun <T> get(key: String): T?
+
     // fun <T> getLive(key: String): LiveData<T>
     /**
      * put key-value for caching

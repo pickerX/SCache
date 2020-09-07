@@ -34,6 +34,15 @@ internal class SSRCache(initialCapacity: Int = 0) : SCache {
         return get(key, defaultValue)
     }
 
+    override fun <T> getArray(key: String): List<T> {
+        val array = get(key, arrayListOf<T>())
+        return array
+    }
+
+    override fun <T> get(key: String): T? {
+        return get(key, null)
+    }
+
     fun <T> get(key: String, defaultValue: T): T {
         val realKey = key.hash()
         val value = mCache[realKey, defaultValue]

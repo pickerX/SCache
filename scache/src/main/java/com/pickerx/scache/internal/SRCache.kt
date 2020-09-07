@@ -71,12 +71,21 @@ internal class SRCache : SCache {
             .match(value, {
                 // expire
                 mIO.remove(hashKey)
-                Log.d("SCache", "key:$key has expired, the delay $it")
+                value = ""
+                Log.d("SCache", "key:$key has expired(removed), the delay is $it seconds")
             }, {
                 // not expire
                 value = it
             })
         return value
+    }
+
+    override fun <T> getArray(key: String): List<T> {
+        TODO("Not yet implemented")
+    }
+
+    override fun <T> get(key: String): T? {
+        TODO("Not yet implemented")
     }
 
     override fun <T> put(key: String, value: T, delay: Long) {

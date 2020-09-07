@@ -37,16 +37,19 @@ class ExpireRule {
         notExpire: (String) -> Unit,
         notMatch: (() -> Unit)? = null
     ) {
+        if (value.isEmpty()) return
+
         val matcher = mPattern.matcher(value)
-        val m = matcher.matches()
+        val m = matcher.find()
 
         if (m) {
             val saveTime = matcher.group(1)?.toLong() ?: 0
             val delay = matcher.group(2)?.toLong() ?: 0
             val now = System.currentTimeMillis()
 
-            if (now - saveTime > delay) expire.invoke(delay)
-            else {
+            if ((now - saveTime) / 1000 > delay) {
+                expire.invoke(delay)
+            } else {
                 // get the real value, exclude the expire rule string
                 val realValue = value.substringAfter(matcher.group(), value)
                 notExpire.invoke(realValue)
