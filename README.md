@@ -1,13 +1,25 @@
 # SCache
-A Super Cache anim to cache data easily for android to avoiding ANR, replacing SharedPreference in some place
+A Super Cache anim to cache data easily for android to avoiding ANR, replacing SharedPreference in some place.  
+Inspired by ACache
+
+## Feature
++ Memory cache
++ File IO cache(like SharedPreference)
 
 ## Usage
 ### Get & Set
 get and set cache like that,
 
-    SCache.get(key:String)
+    // IO Cache
+    val io = Caches.io(context)
+    // Memory cache
+    val cache = Caches.get()
 
-    SCache.put(key:String, value:String, default:String?)
+    io.put("int", 11)
+
+    val int = io.getInt("int")
+
+more functions you can check the [SCache interface](https://github.com/pickerX/SCache/blob/master/scache/src/main/java/com/pickerx/scache/SCache.kt) 
 
 ### Observer(In progress...)
 Support live data observer
